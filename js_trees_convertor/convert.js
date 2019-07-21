@@ -1,7 +1,7 @@
 const convert = arr => Object.assign(
-    {}, ...arr.map(([k, v]) => (v instanceof Array ? { [k]: convert(v) } : { [k]: v })),
-  );
-  
+  {}, ...arr.map(([k, v]) => (v instanceof Array ? { [k]: convert(v) } : { [k]: v })),
+);
+
 export default convert;
 
 // Teacher's solution
