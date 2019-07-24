@@ -1,55 +1,4 @@
-// const sortDeps = (deps) => {
-
-//   const keys = Object.keys(deps);
-
-// }
-
-// console.log(sortDeps(deps1));
-
-// const reduce = (f, tree, acc) => {
-//   const [, children] = tree;
-//   const newAcc = f(acc, tree);
-
-//   if (!children) {
-//     return newAcc;
-//   }
-//   console.log(tree)
-//   return children.reduce((iAcc, n) => reduce(f, n, iAcc), newAcc);
-// };
-
-// const tree = ['A', [
-//   ['B', [['E'], ['F']]],
-//   ['C'],
-//   ['D', [['G'], ['J']]],
-// ]];
-
-// reduce((acc, n) => acc + 1, tree, 0);
-
-const deps1 = {
-  mongo: [],
-  tzinfo: ['thread_safe'],
-  uglifier: ['execjs'],
-  execjs: ['thread_safe', 'json'],
-  redis: []
-};
-
-// const sortDeps = deps => {
-//   const reduce = (f, node, acc) => {
-//     const children = deps1[node];
-//     if (!children || children.length === 0) {
-//       return f(acc, node);
-//     }
-//     children.reduce((iAcc, n) => reduce(f, n, iAcc), acc);
-//     return f(acc, node);
-//   };
-//   const keys = Object.keys(deps);
-//   const func = (acc, n) => (acc.includes(n) ? acc : [...acc, n]);
-//   // keys.reduce()
-//   return keys.reduce((acc, n) => reduce(func, n, acc), []);
-// };
-
-
-const sortDeps = deps => {
+export default deps => {
   const dfs = (f, node, acc) => {
     const children = deps[node];
     if (children) {
@@ -57,9 +6,19 @@ const sortDeps = deps => {
     }
     return f(acc, node);
   };
-  return [...Object.keys(deps).reduce((acc, n) => dfs((acc, n) => acc.add(n), n, acc), new Set())];
+  const keys = Object.keys(deps);
+  const func = (acc, n) => acc.add(n);
+  return [...keys.reduce((acc, n) => dfs(func, n, acc), new Set())];
 };
 
-console.log(sortDeps(deps1));
 
-// ['mongo', 'thread_safe', 'tzinfo', 'json', 'execjs', 'uglifier', 'redis']
+// Teacher's solution
+// export default (deps) => {
+//   const add = (acc, node) => {
+//     const subDeps = deps[node] || [];
+//     const subAcc = subDeps.reduce(add, []);
+//     return { ...acc, ...subAcc, [node]: true };
+//   };
+//   const set = Object.keys(deps).reduce(add, {});
+//   return Object.keys(set);
+// };
