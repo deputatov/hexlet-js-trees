@@ -23,3 +23,23 @@ export default tree =>
 //   };
 
 //   export default du;
+
+const calculatefilesSize = (tree) => {
+  if (isFile(tree)) {
+    const meta = getMeta(tree);
+    return meta.size;
+  }
+
+  const children = getChildren(tree);
+  const sizes = children.map(calculatefilesSize);
+  return _.sum(sizes);
+};
+
+const du = (tree) => {
+  const children = getChildren(tree);
+  const result = children.map((child) => [getName(child), calculatefilesSize(child)]);
+  result.sort(([, size1], [, size2]) => size2 - size1);
+  return result;
+};
+
+export default du;
